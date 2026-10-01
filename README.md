@@ -19,6 +19,10 @@
 </p>
 
 <p align="center">
+  <strong>Demo:</strong> <a href="https://clinica-veterinaria-demo.onrender.com">clinica-veterinaria-demo.onrender.com</a> · cuentas en <a href="#datos-de-demostración">Datos de demostración</a>
+</p>
+
+<p align="center">
   <a href="https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml"><img src="https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-yellow.svg" alt="Licencia MIT"></a>
 </p>
@@ -95,7 +99,7 @@ Para cargar un escenario completo (propietarios, mascotas, veterinarios y cirug�
 ./vendor/bin/sail artisan db:seed --class=ExampleScenarioSeeder
 ```
 
-Cuentas de ejemplo (todas con contraseña `password`):
+Cuentas de ejemplo (todas con contraseña `password`). También funcionan en la demo en línea, donde los datos se reinician en cada arranque:
 
 ```text
 Administrador:  admin@clinica.gob.ec
