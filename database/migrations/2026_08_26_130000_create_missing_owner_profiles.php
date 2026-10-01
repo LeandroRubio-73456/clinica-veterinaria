@@ -10,12 +10,12 @@ return new class extends Migration
         DB::statement(<<<'SQL'
             INSERT INTO owners (user_id, first_name, last_name, email, phone, address, created_at, updated_at)
             SELECT users.id,
-                   LEFT(users.name, 50),
+                   SUBSTR(users.name, 1, 50),
                    'Pendiente',
                    users.email,
                    'Pendiente',
                    'Pendiente de actualizar',
-                   NOW(), NOW()
+                   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
             FROM users
             INNER JOIN roles ON roles.id = users.role_id AND roles.slug = 'propietario'
             LEFT JOIN owners ON owners.user_id = users.id OR owners.email = users.email

@@ -9,10 +9,18 @@ return new class extends Migration
     {
         DB::statement(<<<'SQL'
             UPDATE owners
-            INNER JOIN users ON users.email = owners.email
-            INNER JOIN roles ON roles.id = users.role_id AND roles.slug = 'propietario'
-            SET owners.user_id = users.id
-            WHERE owners.user_id IS NULL
+            SET user_id = (
+                SELECT users.id FROM users
+                INNER JOIN roles ON roles.id = users.role_id AND roles.slug = 'propietario'
+                WHERE users.email = owners.email
+                LIMIT 1
+            )
+            WHERE user_id IS NULL
+              AND EXISTS (
+                SELECT 1 FROM users
+                INNER JOIN roles ON roles.id = users.role_id AND roles.slug = 'propietario'
+                WHERE users.email = owners.email
+              )
         SQL);
     }
 
