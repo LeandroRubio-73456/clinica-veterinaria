@@ -1,0 +1,8 @@
+# Blueprint de Render para la demo pública (plan gratuito).
+# La configuración de la app está en el Dockerfile; aquí solo se define el servicio.
+services:
+  - type: web
+    name: clinica-veterinaria-demo
+    runtime: docker
+    plan: free
+    healthCheckPath: /up

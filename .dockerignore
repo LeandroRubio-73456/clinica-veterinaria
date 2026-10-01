@@ -1,0 +1,14 @@
+.git
+.github
+.env
+node_modules
+vendor
+public/build
+public/hot
+public/storage
+database/*.sqlite
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+tests
