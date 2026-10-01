@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Detrás de un proxy (Render, Nginx) se respeta X-Forwarded-Proto para generar URLs https.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
