@@ -1,199 +1,139 @@
-# Clínica Veterinaria del Municipio
+<p align="center">
+  <img src="public/images/logo-simple.png" alt="Logo de la Clínica Veterinaria del Municipio" width="96">
+</p>
 
-[![tests](https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml/badge.svg)](https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml)
+<h1 align="center">Clínica Veterinaria del Municipio</h1>
 
-Sistema web para organizar cirugías veterinarias, propietarios, mascotas, veterinarios y quirófanos. Centraliza la agenda, evita cruces de horarios, permite dar seguimiento al estado de cada cirugía y presenta indicadores para apoyar decisiones operativas.
+<p align="center">
+  Sistema web de gestión de cirugías para una clínica veterinaria de Quito.<br>
+  Agenda sin cruces de horario, seguimiento de cada cirugía e indicadores para decidir.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel_13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 13">
+  <img src="https://img.shields.io/badge/PHP_8.4-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.4">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Alpine.js-8BC0D0?style=for-the-badge&logo=alpinedotjs&logoColor=black" alt="Alpine.js">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+</p>
+
+<p align="center">
+  <a href="https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml"><img src="https://github.com/LeandroRubio-73456/clinica-veterinaria/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-yellow.svg" alt="Licencia MIT"></a>
+</p>
+
+---
+
+## Contexto
+
+Programar una cirugía en una clínica veterinaria implica coordinar al mismo tiempo un veterinario, un quirófano, una mascota y su propietario. Llevado a mano, eso produce cruces de horario, cirugías sin seguimiento claro y ninguna forma de medir cómo se usan los recursos.
+
+Este sistema centraliza toda la operación quirúrgica de la clínica: impide programar cirugías que se crucen, registra cada cambio de estado, avisa a los propietarios por correo y presenta indicadores operativos en un dashboard y en reportes exportables.
 
 ## Capturas
 
-**Dashboard**
-
-![Dashboard con indicadores operativos](docs/screenshots/dashboard.png)
-
-**Calendario de cirugías**
-
-![Calendario de cirugías](docs/screenshots/calendario.png)
-
-## Tecnologías
-
-- Laravel 13 / PHP 8.4+
-- MySQL
-- Blade + Tailwind CSS + Alpine.js
-- FullCalendar (agenda y calendario de cirugías)
-- Pest (pruebas automatizadas)
-- Docker / Laravel Sail para el entorno de desarrollo
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard con indicadores operativos" width="49%">
+  <img src="docs/screenshots/calendario.png" alt="Calendario de cirugías" width="49%">
+</p>
 
 ## Funciones principales
 
-- Dashboard con agenda, cirugías próximas e indicadores operativos, con actualización automática sin recargar la página.
-- Registro y consulta de propietarios y mascotas, con creación automática de la cuenta de acceso del propietario (usuario y contraseña inicial basados en su cédula).
-- Registro de veterinarios con creación automática de su cuenta de acceso, evitando cuentas duplicadas.
-- Programación y edición de cirugías con validación de cruces de veterinario, quirófano y horario.
-- Calendario de cirugías y flujo de estados: programada, en progreso, completada, cancelada y no presentada.
-- Registro de motivos, notas y conflictos de agenda rechazados.
-- Portal de propietarios para consultar sus mascotas y cirugías, y actualizar su perfil y contraseña.
-- Reportes diarios, semanales, mensuales y por rango personalizado, con exportación a CSV y PDF.
-- Usuarios, roles y permisos dinámicos.
-- Notificaciones internas y correos de cirugía (confirmaciones y recordatorios).
-- Comando automático para marcar como no presentadas las cirugías fuera del tiempo de tolerancia.
+- **Programación de cirugías** con validación de cruces de veterinario, quirófano y horario, también al editar.
+- **Calendario y flujo de estados:** programada, en progreso, completada, cancelada y no presentada.
+- **Dashboard en vivo** con agenda, próximas cirugías e indicadores que se actualizan sin recargar la página.
+- **Propietarios y mascotas**, con creación automática de la cuenta de acceso del propietario.
+- **Portal del propietario** para consultar sus mascotas y cirugías y actualizar su perfil.
+- **Reportes** diarios, semanales, mensuales o por rango, con exportación a CSV y PDF.
+- **Roles y permisos dinámicos** para administración, personal administrativo, veterinarios y propietarios.
+- **Notificaciones** internas y por correo: confirmaciones y recordatorios de cirugía.
+- **Tareas automáticas:** marcar como no presentadas las cirugías fuera de tolerancia y enviar recordatorios.
 
-## Requisitos
+## Stack tecnológico
 
-- PHP 8.4 o superior.
-- Composer 2.
-- Node.js 20 o superior y npm.
-- MySQL 8 o SQLite.
-- Git.
-- Para Docker: Docker Desktop con WSL 2 en Windows.
+- Laravel 13 / PHP 8.4
+- MySQL 8 (o SQLite)
+- Blade + Tailwind CSS + Alpine.js
+- FullCalendar para la agenda
+- Pest para pruebas automatizadas, ejecutadas en GitHub Actions contra MySQL
+- Docker / Laravel Sail para el entorno de desarrollo, Mailpit para correo local
 
-## Instalación con Docker / Laravel Sail
+## Decisiones técnicas
+
+- **Cruces de horario resueltos en la base de datos, no solo en el formulario.** Programar o editar una cirugía ocurre dentro de una transacción que bloquea (`lockForUpdate`) las filas del veterinario y del quirófano antes de comprobar solapamientos. Así, dos personas que programan a la vez no pueden ocupar el mismo horario.
+- **Los conflictos rechazados también son datos.** Cuando se rechaza una programación, el intento se guarda en `scheduling_conflicts` *después* de revertir la transacción, para que no se pierda con ella. Esto alimenta el indicador de conflictos evitados.
+- **Seguridad por capas.** Un middleware de roles limita módulos completos, las policies controlan cada acción y transición de estado de una cirugía, y los Form Requests validan toda entrada antes de llegar al controlador.
+- **Reglas de negocio fuera de las vistas.** Los indicadores se calculan en `ReportService` y las vistas solo presentan resultados, así una métrica no se calcula de dos formas distintas.
+- **Procesos que no dependen de que alguien los recuerde.** Dos comandos programados con el scheduler de Laravel marcan como no presentadas las cirugías que superan una tolerancia configurable y envían los recordatorios por correo.
+
+## Instalación
+
+Requisitos: Docker Desktop (con WSL 2 en Windows).
 
 ```bash
 git clone https://github.com/LeandroRubio-73456/clinica-veterinaria.git
 cd clinica-veterinaria
 cp .env.example .env
 docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php84-composer:latest composer install
-./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 ./vendor/bin/sail npm install
 ./vendor/bin/sail npm run build
 ```
 
-Abre `http://localhost`. Para desarrollo con actualización de estilos en caliente:
+Abre `http://localhost`. Los correos de prueba se ven en Mailpit: `http://localhost:8025`.
+
+Instalación con XAMPP o Laragon, tareas programadas, correo SMTP y solución de problemas: [docs/instalacion.md](docs/instalacion.md).
+
+### Datos de demostración
+
+Para cargar un escenario completo (propietarios, mascotas, veterinarios y cirugías):
 
 ```bash
-./vendor/bin/sail npm run dev
-```
-
-## Instalación con XAMPP
-
-1. Instala PHP 8.4, Composer y Node.js. XAMPP debe tener MySQL activo.
-2. Copia el proyecto dentro de `htdocs`.
-3. Ejecuta `composer install` y `npm install`.
-4. Copia `.env.example` a `.env`.
-5. Crea una base de datos, por ejemplo `clinica_veterinaria`.
-6. Configura en `.env`:
-
-```env
-APP_URL=http://localhost/clinica-veterinaria/public
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=clinica_veterinaria
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Continúa con:
-
-```bash
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-npm run build
-```
-
-Accede a `http://localhost/clinica-veterinaria/public`. Para desarrollo, puedes usar `php artisan serve` y abrir `http://127.0.0.1:8000`.
-
-## Instalación con Laragon
-
-1. Copia el proyecto en `C:\laragon\www\clinica-veterinaria`.
-2. Inicia Apache y MySQL desde Laragon.
-3. Crea la base de datos `clinica_veterinaria`.
-4. Configura `.env` con MySQL, normalmente con usuario `root` y contraseña vacía.
-5. Ejecuta desde la terminal de Laragon:
-
-```bash
-composer install
-copy .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-npm install
-npm run build
-```
-
-Laragon permite abrir el proyecto con `http://clinica-veterinaria.test` si el directorio está dentro de `www`.
-
-## Datos de demostración
-
-Para cargar un escenario completo de datos de ejemplo (propietarios, mascotas, veterinarios y cirugías):
-
-```bash
-php artisan db:seed --class=ExampleScenarioSeeder
-```
-
-Con Sail:
-
-```bash
-./vendor/bin/sail artisan db:seed
 ./vendor/bin/sail artisan db:seed --class=ExampleScenarioSeeder
 ```
 
-Cuentas de ejemplo creadas por los seeders (todas con contraseña `password`):
+Cuentas de ejemplo (todas con contraseña `password`):
 
 ```text
 Administrador:  admin@clinica.gob.ec
 Administrativo: ejemplo.administrativo@clinica.local
 Veterinario:    ejemplo.veterinario@clinica.local
-Propietario:    ejemplo.propietario.01@clinica.local (hasta ejemplo.propietario.12@clinica.local)
+Propietario:    ejemplo.propietario.01@clinica.local (hasta .12)
 ```
-
-## Automatizaciones
-
-En `routes/console.php` se programan cada minuto:
-
-```bash
-php artisan surgeries:mark-no-show
-php artisan surgeries:send-reminders
-```
-
-En producción se debe mantener activo el scheduler de Laravel. En desarrollo puede ejecutarse:
-
-```bash
-php artisan schedule:work
-```
-
-Para procesar la cola de correos:
-
-```bash
-php artisan queue:work
-```
-
-## Correo
-
-El correo local de Docker usa Mailpit en `http://localhost:8025`. Para un proveedor SMTP real, configura `MAIL_MAILER=smtp` y las credenciales correspondientes en `.env`. No publiques contraseñas SMTP en el control de versiones.
 
 ## Pruebas
-
-```bash
-php artisan test
-```
-
-Con Sail:
 
 ```bash
 ./vendor/bin/sail artisan test
 ```
 
-## Documentación adicional
+## Estructura del proyecto
 
-Consulta [`docs/guia-tecnica.md`](docs/guia-tecnica.md) para una descripción de la arquitectura, el flujo de una cirugía, las reglas de seguridad y la interpretación de los indicadores de reportes.
-
-## Solución rápida de problemas
-
-```bash
-php artisan optimize:clear
-php artisan migrate:status
-php artisan storage:link
+```
+app/
+├── Console/Commands/   # Tareas programadas: ausencias y recordatorios
+├── Http/
+│   ├── Controllers/    # Un controlador por módulo
+│   ├── Middleware/     # RoleMiddleware
+│   └── Requests/       # Validación de cada formulario
+├── Models/             # Modelos Eloquent
+├── Policies/           # Autorización por acción
+└── Services/           # Reportes, notificaciones y correos
+docs/
+├── guia-tecnica.md     # Arquitectura, flujo de una cirugía e indicadores
+└── instalacion.md      # Otras formas de instalación y operación
 ```
 
-Si aparece un error de permisos en Docker, ejecuta los comandos Artisan dentro del contenedor mediante Sail y verifica que la carpeta del proyecto tenga permisos de escritura para `storage` y `bootstrap/cache`.
+La [guía técnica](docs/guia-tecnica.md) explica en detalle la arquitectura, el flujo de una cirugía, las reglas de seguridad y cómo interpretar cada indicador.
 
-## Seguridad
+## Autor
 
-Las credenciales de los seeders son únicamente para demostración. En una instalación real cambia las contraseñas, configura `APP_DEBUG=false`, usa HTTPS y define un correo SMTP seguro.
+Desarrollado por **Leandro Rubio**.
+
+[Portafolio](https://leandrorubio-73456.github.io/portafolio/) · [LinkedIn](https://www.linkedin.com/in/leandro-rubio-369651367/) · leandrorubio456@gmail.com
 
 ## Licencia
 
